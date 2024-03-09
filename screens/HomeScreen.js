@@ -10,7 +10,18 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import { app } from "../config/firebaseConfig";
-import { getDatabase, ref, set, push, onChildAdded } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  push,
+  onChildAdded,
+  onChildChanged,
+  onChildRemoved,
+  remove,
+  update,
+  off,
+} from "firebase/database";
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
@@ -26,6 +37,19 @@ const addTask = (task) => {
   });
 };
 
+const toggleSwitch = (currentIsDone, key) => {
+  // console.log(key);
+  const updateRef = ref(database, "users/" + userId + "/" + key);
+  update(updateRef, {
+    isDone: !currentIsDone,
+  });
+};
+
+const deleteTask = (key) => {
+  const delRef = ref(database, "users/" + userId + "/" + key);
+  remove(delRef);
+};
+
 export const HomeScreen = () => {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
@@ -39,7 +63,27 @@ export const HomeScreen = () => {
       ]);
     });
 
+    onChildChanged(userReference, (data) => {
+      setTasks((tasks) =>
+        tasks.map((task) => {
+          if (task.key === data.key) {
+            return {
+              ...task,
+              isDone: data.val().isDone,
+            };
+          } else {
+            return task;
+          }
+        })
+      );
+    });
+
+    onChildRemoved(userReference, (data) => {
+      setTasks((tasks) => tasks.filter((task) => task.key !== data.key));
+    });
+
     return () => {
+      off(userReference);
       setTasks([]);
       console.log("cleanup called!");
     };
@@ -52,7 +96,7 @@ export const HomeScreen = () => {
         style={styles.input}
         value={task}
         onChangeText={setTask}
-        placeholder="add to-do list..."
+        placeholder="add to-do task..."
       />
       <Button
         title="Add"
@@ -62,12 +106,12 @@ export const HomeScreen = () => {
           console.log("task added!");
         }}
       />
-      <Button
+      {/* <Button
         title="tasks"
         onPress={() => {
           console.log(tasks);
         }}
-      />
+      /> */}
       <ScrollView>
         {tasks.map((task) => {
           return (
@@ -85,7 +129,7 @@ export const HomeScreen = () => {
                 value={task.isDone}
                 onValueChange={() => toggleSwitch(task.isDone, task.key)}
               />
-              <Button title="delete" onPress={() => deleteData(task.key)} />
+              <Button title="delete" onPress={() => deleteTask(task.key)} />
             </View>
           );
         })}
