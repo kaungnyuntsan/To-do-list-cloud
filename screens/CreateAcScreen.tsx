@@ -1,10 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
-export const SignUpScreen = () => {
+export const CreateAcScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}> Sign Up Screen</Text>
+      <Text style={styles.text}> Create Ac Screen</Text>
       <StatusBar style="auto" />
     </View>
   );

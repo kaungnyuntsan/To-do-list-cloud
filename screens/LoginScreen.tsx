@@ -1,10 +1,40 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import {
+  getAuth,
+  initializeAuth,
+  getReactNativePersistence,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../App";
 
-export const LoginScreen = () => {
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
+// import { app } from "../config/firebaseConfig";
+// import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+
+// Initialize Firebase Authentication and get a reference to the service
+// const auth = initializeAuth(app, {
+//   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+// });
+
+// const auth = getAuth(app);
+
+export const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const loginEmailPassword = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log(userCredential.user);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -12,8 +42,8 @@ export const LoginScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="email"
-        value={loginEmail}
-        onChangeText={setLoginEmail}
+        value={email}
+        onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
       />
@@ -21,16 +51,23 @@ export const LoginScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="password"
-        value={loginPassword}
-        onChangeText={setLoginPassword}
+        value={password}
+        onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="log in" onPress={() => {}} />
+      <Button title="log in" onPress={loginEmailPassword} />
       <Text style={{ textAlign: "center", fontSize: 18 }}>
         {" "}
         Forgot password?{" "}
       </Text>
-      <Button title="create new account" onPress={() => {}} />
+      <Button
+        title="create new account"
+        onPress={() => navigation.navigate("CreateAc")}
+      />
+      <Button
+        title="console current user"
+        onPress={() => console.log(auth.currentUser)}
+      />
       <StatusBar style="auto" />
     </View>
   );
