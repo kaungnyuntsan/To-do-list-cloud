@@ -7,7 +7,10 @@ import {
   getReactNativePersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../App";
+// import { auth } from "../App";
+import { app } from "../config/firebaseConfig";
+
+export const auth = getAuth(app);
 
 // import { app } from "../config/firebaseConfig";
 // import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";

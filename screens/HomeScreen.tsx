@@ -22,11 +22,12 @@ import {
   update,
   off,
 } from "firebase/database";
+import { auth } from "./LoginScreen";
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
-const userId = "jim";
+const userId = auth.currentUser?.uid;
 const userReference = ref(database, "users/" + userId);
 
 const addTask = (task) => {
@@ -54,8 +55,10 @@ export const HomeScreen = () => {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
-    console.log("useEffet run!");
+    console.log("HomeScreen useEffet run!");
     onChildAdded(userReference, (data) => {
       setTasks((tasks) => [
         ...tasks,
@@ -106,12 +109,16 @@ export const HomeScreen = () => {
           console.log("task added!");
         }}
       />
-      {/* <Button
-        title="tasks"
+      <Button
+        title="console current user"
+        onPress={() => console.log(auth.currentUser)}
+      />
+      <Button
+        title="userId"
         onPress={() => {
-          console.log(tasks);
+          console.log(userId);
         }}
-      /> */}
+      />
       <ScrollView>
         {tasks.map((task) => {
           return (
