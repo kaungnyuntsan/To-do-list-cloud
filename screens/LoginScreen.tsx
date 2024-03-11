@@ -49,6 +49,7 @@ export const LoginScreen = ({ navigation }) => {
         placeholder="password"
         value={password}
         onChangeText={setPassword}
+        autoCapitalize="none"
         secureTextEntry
       />
       <Button title="log in" onPress={loginEmailPassword} />
