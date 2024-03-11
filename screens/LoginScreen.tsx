@@ -7,20 +7,13 @@ import {
   getReactNativePersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-// import { auth } from "../App";
 import { app } from "../config/firebaseConfig";
-
-export const auth = getAuth(app);
-
-// import { app } from "../config/firebaseConfig";
-// import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 // Initialize Firebase Authentication and get a reference to the service
-// const auth = initializeAuth(app, {
-//   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
-// });
-
-// const auth = getAuth(app);
+export const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
 
 export const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -33,7 +26,7 @@ export const LoginScreen = ({ navigation }) => {
         email,
         password
       );
-      console.log(userCredential.user);
+      // console.log(userCredential.user);
     } catch (error) {
       console.error(error);
     }

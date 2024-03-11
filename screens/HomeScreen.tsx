@@ -23,42 +23,20 @@ import {
   off,
 } from "firebase/database";
 import { auth } from "./LoginScreen";
+import { signOut } from "firebase/auth";
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
-
-const userId = auth.currentUser?.uid;
-const userReference = ref(database, "users/" + userId);
-
-const addTask = (task) => {
-  const newTaskReference = push(userReference);
-  set(newTaskReference, {
-    task,
-    isDone: false,
-  });
-};
-
-const toggleSwitch = (currentIsDone, key) => {
-  // console.log(key);
-  const updateRef = ref(database, "users/" + userId + "/" + key);
-  update(updateRef, {
-    isDone: !currentIsDone,
-  });
-};
-
-const deleteTask = (key) => {
-  const delRef = ref(database, "users/" + userId + "/" + key);
-  remove(delRef);
-};
 
 export const HomeScreen = () => {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     console.log("HomeScreen useEffet run!");
+    const userId = auth.currentUser?.uid;
+    const userReference = ref(database, "users/" + userId);
+
     onChildAdded(userReference, (data) => {
       setTasks((tasks) => [
         ...tasks,
@@ -90,7 +68,41 @@ export const HomeScreen = () => {
       setTasks([]);
       console.log("cleanup called!");
     };
-  }, [userReference]);
+  }, []);
+
+  const addTask = (task) => {
+    const userId = auth.currentUser?.uid;
+    const userReference = ref(database, "users/" + userId);
+
+    // console.log(userReference);
+    const newTaskReference = push(userReference);
+    set(newTaskReference, {
+      task,
+      isDone: false,
+    });
+  };
+
+  const toggleSwitch = (currentIsDone, key) => {
+    // console.log(key);
+
+    const userId = auth.currentUser?.uid;
+
+    const updateRef = ref(database, "users/" + userId + "/" + key);
+    update(updateRef, {
+      isDone: !currentIsDone,
+    });
+  };
+
+  const deleteTask = (key) => {
+    const userId = auth.currentUser?.uid;
+
+    const delRef = ref(database, "users/" + userId + "/" + key);
+    remove(delRef);
+  };
+
+  const logout = async () => {
+    await signOut(auth);
+  };
 
   return (
     <View style={styles.container}>
@@ -113,12 +125,7 @@ export const HomeScreen = () => {
         title="console current user"
         onPress={() => console.log(auth.currentUser)}
       />
-      <Button
-        title="userId"
-        onPress={() => {
-          console.log(userId);
-        }}
-      />
+      <Button title="sign out" onPress={logout} />
       <ScrollView>
         {tasks.map((task) => {
           return (

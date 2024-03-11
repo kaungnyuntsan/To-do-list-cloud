@@ -6,25 +6,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { app } from "./config/firebaseConfig";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect } from "react";
+import { View, Text } from "react-native";
 
-import {
-  getAuth,
-  initializeAuth,
-  getReactNativePersistence,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./screens/LoginScreen";
-
-// Initialize Firebase Authentication and get a reference to the service
-// const auth = initializeAuth(app, {
-//   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
-// });
-
-// export const auth = getAuth(app);
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
 
   useEffect(() => {
@@ -35,12 +25,23 @@ export default function App() {
         // User is signed in
         console.log("user exist!");
         setUserToken(user.uid);
+        setIsLoading(false);
       } else {
         console.log("user not found!");
         setUserToken(null);
+        setIsLoading(false);
+        // setUserToken("fake_token");
       }
     });
   }, [auth]);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ fontSize: 20 }}> Loading... </Text>
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
