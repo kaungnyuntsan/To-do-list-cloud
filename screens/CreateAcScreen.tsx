@@ -1,11 +1,26 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { useState } from "react";
+import { auth } from "./LoginScreen";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export const CreateAcScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const createAccount = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log(userCredential.user);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -37,8 +52,9 @@ export const CreateAcScreen = () => {
         secureTextEntry
       />
 
-      <Button title="pass" onPress={() => console.log(password)} />
-      <Button title="Cpass" onPress={() => console.log(confirmPassword)} />
+      <Button title="create account" onPress={createAccount} />
+      {/* <Button title="pass" onPress={() => console.log(password)} />
+      <Button title="Cpass" onPress={() => console.log(confirmPassword)} /> */}
       <StatusBar style="auto" />
     </View>
   );

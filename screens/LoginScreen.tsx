@@ -61,10 +61,10 @@ export const LoginScreen = ({ navigation }) => {
         title="create new account"
         onPress={() => navigation.navigate("CreateAc")}
       />
-      <Button
+      {/* <Button
         title="console current user"
         onPress={() => console.log(auth.currentUser)}
-      />
+      /> */}
       <StatusBar style="auto" />
     </View>
   );

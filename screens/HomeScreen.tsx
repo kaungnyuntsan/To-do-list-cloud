@@ -121,10 +121,10 @@ export const HomeScreen = () => {
           console.log("task added!");
         }}
       />
-      <Button
+      {/* <Button
         title="console current user"
         onPress={() => console.log(auth.currentUser)}
-      />
+      /> */}
       <Button title="sign out" onPress={logout} />
       <ScrollView>
         {tasks.map((task) => {
