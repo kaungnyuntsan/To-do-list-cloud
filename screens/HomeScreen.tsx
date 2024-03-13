@@ -7,6 +7,7 @@ import {
   Button,
   ScrollView,
   Switch,
+  FlatList,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { app } from "../config/firebaseConfig";
@@ -39,6 +40,7 @@ export const HomeScreen = () => {
 
     onChildAdded(userReference, (data) => {
       console.log("onChild Added event run!");
+      // console.log(data);
       setTasks((tasks) => [
         ...tasks,
         { key: data.key, task: data.val().task, isDone: data.val().isDone },
@@ -107,6 +109,30 @@ export const HomeScreen = () => {
     await signOut(auth);
   };
 
+  const renderItem = ({ item }) => {
+    return (
+      <View key={item.key} style={{ flexDirection: "row" }}>
+        <Switch
+          value={item.isDone}
+          onValueChange={() => toggleSwitch(item.isDone, item.key)}
+        />
+        <ScrollView horizontal>
+          <Text
+            style={{
+              fontSize: 20,
+              textDecorationLine: item.isDone ? "line-through" : "none",
+            }}
+          >
+            {" "}
+            {item.task}
+          </Text>
+        </ScrollView>
+
+        <Button title="delete" onPress={() => deleteTask(item.key)} />
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}> Home Screen</Text>
@@ -129,28 +155,8 @@ export const HomeScreen = () => {
         onPress={() => console.log(auth.currentUser)}
       /> */}
       <Button title="sign out" onPress={logout} />
-      <ScrollView>
-        {tasks.map((task) => {
-          return (
-            <View key={task.key} style={{ flexDirection: "row" }}>
-              <Text
-                style={{
-                  fontSize: 20,
-                  textDecorationLine: task.isDone ? "line-through" : "none",
-                }}
-              >
-                {" "}
-                {task.task}
-              </Text>
-              <Switch
-                value={task.isDone}
-                onValueChange={() => toggleSwitch(task.isDone, task.key)}
-              />
-              <Button title="delete" onPress={() => deleteTask(task.key)} />
-            </View>
-          );
-        })}
-      </ScrollView>
+      <FlatList data={tasks} renderItem={renderItem} />
+
       <StatusBar style="auto" />
     </View>
   );
