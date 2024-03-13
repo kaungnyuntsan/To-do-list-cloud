@@ -6,7 +6,9 @@ import {
   initializeAuth,
   getReactNativePersistence,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
+// skip firebaseConfig files to git
 import { app } from "../config/firebaseConfig";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -36,12 +38,14 @@ export const LoginScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.text}> Login Screen</Text>
       <TextInput
+        autoCapitalize="none"
         style={styles.input}
         placeholder="email"
         value={email}
         onChangeText={setEmail}
-        autoCapitalize="none"
         keyboardType="email-address"
+        autoComplete="off"
+        autoCorrect={false}
       />
 
       <TextInput
@@ -53,10 +57,18 @@ export const LoginScreen = ({ navigation }) => {
         secureTextEntry
       />
       <Button title="log in" onPress={loginEmailPassword} />
-      <Text style={{ textAlign: "center", fontSize: 18 }}>
+      {/* <Text style={{ textAlign: "center", fontSize: 18 }}>
         {" "}
         Forgot password?{" "}
-      </Text>
+      </Text> */}
+      <Button
+        title="Forgot password?"
+        onPress={() =>
+          navigation.navigate("ForgotPassword", {
+            currentEmail: email,
+          })
+        }
+      />
       <Button
         title="create new account"
         onPress={() => navigation.navigate("CreateAc")}

@@ -3,13 +3,12 @@ import { LoginScreen } from "./screens/LoginScreen";
 import { CreateAcScreen } from "./screens/CreateAcScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { app } from "./config/firebaseConfig";
-import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./screens/LoginScreen";
+import { ForgotPasswordScreen } from "./screens/ForgotPasswordScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +49,10 @@ export default function App() {
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="CreateAc" component={CreateAcScreen} />
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPasswordScreen}
+            />
           </>
         ) : (
           <Stack.Screen name="Home" component={HomeScreen} />

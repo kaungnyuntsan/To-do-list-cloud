@@ -38,6 +38,7 @@ export const HomeScreen = () => {
     const userReference = ref(database, "users/" + userId);
 
     onChildAdded(userReference, (data) => {
+      console.log("onChild Added event run!");
       setTasks((tasks) => [
         ...tasks,
         { key: data.key, task: data.val().task, isDone: data.val().isDone },
@@ -45,6 +46,7 @@ export const HomeScreen = () => {
     });
 
     onChildChanged(userReference, (data) => {
+      console.log("onChild change event run!");
       setTasks((tasks) =>
         tasks.map((task) => {
           if (task.key === data.key) {
@@ -60,6 +62,7 @@ export const HomeScreen = () => {
     });
 
     onChildRemoved(userReference, (data) => {
+      console.log("onChild remove event run!");
       setTasks((tasks) => tasks.filter((task) => task.key !== data.key));
     });
 
