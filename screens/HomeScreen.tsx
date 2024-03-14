@@ -9,7 +9,7 @@ import {
   Switch,
   FlatList,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { app } from "../config/firebaseConfig";
 import {
   getDatabase,
@@ -22,6 +22,7 @@ import {
   remove,
   update,
   off,
+  onValue,
 } from "firebase/database";
 import { auth } from "./LoginScreen";
 import { signOut } from "firebase/auth";
@@ -37,6 +38,22 @@ export const HomeScreen = () => {
     console.log("HomeScreen useEffet run!");
     const userId = auth.currentUser?.uid;
     const userReference = ref(database, "users/" + userId);
+
+    // onValue(
+    //   userReference,
+    //   (snapshot) => {
+    //     console.log("onValue event called!");
+    //     snapshot.forEach((data) => {
+    //       setTasks((tasks) => [
+    //         ...tasks,
+    //         { key: data.key, task: data.val().task, isDone: data.val().isDone },
+    //       ]);
+    //     });
+    //   },
+    //   {
+    //     onlyOnce: true,
+    //   }
+    // );
 
     onChildAdded(userReference, (data) => {
       console.log("onChild Added event run!");
@@ -81,10 +98,17 @@ export const HomeScreen = () => {
 
     // console.log(userReference);
     const newTaskReference = push(userReference);
+    // const key = newTaskReference.key;
     set(newTaskReference, {
+      // key: newTaskReference.key,
       task,
       isDone: false,
     });
+    // .then(() => {
+    //   console.log("promise success called");
+    //   setTasks((tasks) => [...tasks, { key, task, isDone: false }]);
+    // })
+    // .catch((error) => console.error(error));
   };
 
   const toggleSwitch = (currentIsDone, key) => {
@@ -116,7 +140,7 @@ export const HomeScreen = () => {
           value={item.isDone}
           onValueChange={() => toggleSwitch(item.isDone, item.key)}
         />
-        <ScrollView horizontal>
+        <ScrollView>
           <Text
             style={{
               fontSize: 20,
@@ -141,6 +165,11 @@ export const HomeScreen = () => {
         value={task}
         onChangeText={setTask}
         placeholder="add to-do task..."
+        onSubmitEditing={() => {
+          addTask(task);
+          setTask("");
+          console.log("task added!");
+        }}
       />
       <Button
         title="Add"
@@ -150,10 +179,7 @@ export const HomeScreen = () => {
           console.log("task added!");
         }}
       />
-      {/* <Button
-        title="console current user"
-        onPress={() => console.log(auth.currentUser)}
-      /> */}
+      {/* <Button title="console tasks" onPress={() => console.log(tasks)} /> */}
       <Button title="sign out" onPress={logout} />
       <FlatList data={tasks} renderItem={renderItem} />
 
