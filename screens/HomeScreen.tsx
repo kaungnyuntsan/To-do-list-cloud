@@ -23,6 +23,8 @@ import {
   update,
   off,
   onValue,
+  query,
+  orderByKey,
 } from "firebase/database";
 import { auth } from "./LoginScreen";
 import { signOut } from "firebase/auth";
@@ -33,6 +35,16 @@ const database = getDatabase(app);
 export const HomeScreen = () => {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
+
+  const sortCompareFn = (a, b) => {
+    if (a.key < b.key) {
+      return 1;
+    }
+    if (a.key > b.key) {
+      return -1;
+    }
+    return 0;
+  };
 
   useEffect(() => {
     console.log("HomeScreen useEffet run!");
@@ -57,11 +69,16 @@ export const HomeScreen = () => {
 
     onChildAdded(userReference, (data) => {
       console.log("onChild Added event run!");
-      // console.log(data);
+
       setTasks((tasks) => [
         ...tasks,
         { key: data.key, task: data.val().task, isDone: data.val().isDone },
       ]);
+
+      setTasks((tasks) => {
+        const newRefTasks = [...tasks];
+        return newRefTasks.sort(sortCompareFn);
+      });
     });
 
     onChildChanged(userReference, (data) => {
@@ -91,6 +108,11 @@ export const HomeScreen = () => {
       console.log("cleanup called!");
     };
   }, []);
+
+  // useEffect(() => {
+  //   console.log("useEffect 2 running!");
+  //   // sortedTasks();
+  // }, [tasks]);
 
   const addTask = (task) => {
     const userId = auth.currentUser?.uid;
@@ -134,6 +156,7 @@ export const HomeScreen = () => {
   };
 
   const renderItem = ({ item }) => {
+    // console.log(item);
     return (
       <View key={item.key} style={{ flexDirection: "row" }}>
         <Switch
@@ -180,6 +203,7 @@ export const HomeScreen = () => {
         }}
       />
       {/* <Button title="console tasks" onPress={() => console.log(tasks)} /> */}
+
       <Button title="sign out" onPress={logout} />
       <FlatList data={tasks} renderItem={renderItem} />
 
