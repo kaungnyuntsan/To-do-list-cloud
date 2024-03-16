@@ -28,6 +28,7 @@ import {
 } from "firebase/database";
 import { auth } from "./LoginScreen";
 import { signOut } from "firebase/auth";
+import { Todolists } from "../features/Todolists";
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
@@ -155,30 +156,37 @@ export const HomeScreen = () => {
     await signOut(auth);
   };
 
-  const renderItem = ({ item }) => {
-    // console.log(item);
-    return (
-      <View key={item.key} style={{ flexDirection: "row" }}>
-        <Switch
-          value={item.isDone}
-          onValueChange={() => toggleSwitch(item.isDone, item.key)}
-        />
-        <ScrollView>
-          <Text
-            style={{
-              fontSize: 20,
-              textDecorationLine: item.isDone ? "line-through" : "none",
-            }}
-          >
-            {" "}
-            {item.task}
-          </Text>
-        </ScrollView>
+  // const renderItem = ({ item }) => {
+  //   // console.log(item);
+  //   return (
+  //     <View
+  //       key={item.key}
+  //       style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
+  //     >
+  //       <Switch
+  //         value={item.isDone}
+  //         onValueChange={() => toggleSwitch(item.isDone, item.key)}
+  //       />
 
-        <Button title="delete" onPress={() => deleteTask(item.key)} />
-      </View>
-    );
-  };
+  //       <ScrollView horizontal>
+  //         <Text
+  //           style={{
+  //             fontSize: 20,
+  //             padding: 10,
+  //             marginLeft: 10,
+  //             height: 50,
+  //             textDecorationLine: item.isDone ? "line-through" : "none",
+  //           }}
+  //         >
+  //           {" "}
+  //           {item.task}
+  //         </Text>
+  //       </ScrollView>
+
+  //       <Button title="delete" onPress={() => deleteTask(item.key)} />
+  //     </View>
+  //   );
+  // };
 
   return (
     <View style={styles.container}>
@@ -205,7 +213,12 @@ export const HomeScreen = () => {
       {/* <Button title="console tasks" onPress={() => console.log(tasks)} /> */}
 
       <Button title="sign out" onPress={logout} />
-      <FlatList data={tasks} renderItem={renderItem} />
+      {/* <FlatList data={tasks} renderItem={renderItem} /> */}
+      <Todolists
+        tasks={tasks}
+        toggleSwitch={toggleSwitch}
+        deleteTask={deleteTask}
+      />
 
       <StatusBar style="auto" />
     </View>
@@ -216,6 +229,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    margin: 10,
     // alignItems: "center",
     // justifyContent: "center",
   },
