@@ -2,6 +2,8 @@
 
 
 /config/firebaseConfig.js
+config/
+
 
 # dependencies
 node_modules/
