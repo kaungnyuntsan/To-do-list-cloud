@@ -6,19 +6,21 @@ export const Todolists = ({ tasks, toggleSwitch, deleteTask }) => {
     return (
       <View
         key={item.key}
-        style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          alignItems: "center",
+        }}
       >
         <Switch
           value={item.isDone}
           onValueChange={() => toggleSwitch(item.isDone, item.key)}
         />
-
         <ScrollView horizontal>
           <Text
             style={{
               fontSize: 20,
               padding: 10,
-              marginLeft: 10,
               height: 50,
               textDecorationLine: item.isDone ? "line-through" : "none",
             }}
@@ -27,11 +29,14 @@ export const Todolists = ({ tasks, toggleSwitch, deleteTask }) => {
             {item.task}
           </Text>
         </ScrollView>
-
         <Button title="delete" onPress={() => deleteTask(item.key)} />
       </View>
     );
   };
 
-  return <FlatList data={tasks} renderItem={renderItem} />;
+  return (
+    <View style={{ flex: 1 }}>
+      <FlatList data={tasks} renderItem={renderItem} />
+    </View>
+  );
 };

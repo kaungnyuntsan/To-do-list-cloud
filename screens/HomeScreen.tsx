@@ -8,6 +8,7 @@ import {
   ScrollView,
   Switch,
   FlatList,
+  Keyboard,
 } from "react-native";
 import { useEffect, useReducer, useState } from "react";
 import { app } from "../config/firebaseConfig";
@@ -207,12 +208,13 @@ export const HomeScreen = () => {
         onPress={() => {
           addTask(task);
           setTask("");
+          Keyboard.dismiss();
           console.log("task added!");
         }}
       />
       {/* <Button title="console tasks" onPress={() => console.log(tasks)} /> */}
 
-      <Button title="sign out" onPress={logout} />
+      {/* <Button title="sign out" onPress={logout} /> */}
       {/* <FlatList data={tasks} renderItem={renderItem} /> */}
       <Todolists
         tasks={tasks}
@@ -229,7 +231,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    margin: 10,
+    margin: 5,
     // alignItems: "center",
     // justifyContent: "center",
   },
