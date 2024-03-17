@@ -16,7 +16,7 @@ export const Todolists = ({ tasks, toggleSwitch, deleteTask }) => {
           value={item.isDone}
           onValueChange={() => toggleSwitch(item.isDone, item.key)}
         />
-        <ScrollView horizontal>
+        <ScrollView horizontal snapToOffsets={[1]}>
           <Text
             style={{
               fontSize: 20,
