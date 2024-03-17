@@ -34,6 +34,10 @@ import { Todolists } from "../features/Todolists";
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
+export const logout = async () => {
+  await signOut(auth);
+};
+
 export const HomeScreen = () => {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
@@ -153,10 +157,6 @@ export const HomeScreen = () => {
     remove(delRef);
   };
 
-  const logout = async () => {
-    await signOut(auth);
-  };
-
   // const renderItem = ({ item }) => {
   //   // console.log(item);
   //   return (
@@ -214,8 +214,8 @@ export const HomeScreen = () => {
       />
       {/* <Button title="console tasks" onPress={() => console.log(tasks)} /> */}
 
-      {/* <Button title="sign out" onPress={logout} /> */}
       {/* <FlatList data={tasks} renderItem={renderItem} /> */}
+      {/* <Button title="sign out" onPress={logout} /> */}
       <Todolists
         tasks={tasks}
         toggleSwitch={toggleSwitch}

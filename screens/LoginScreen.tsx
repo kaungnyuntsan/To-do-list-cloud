@@ -20,8 +20,13 @@ export const auth = initializeAuth(app, {
 export const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const loginEmailPassword = async () => {
+    if (email === "" || password === "") {
+      setErrorMessage("email and password cannot be blank.");
+      return;
+    }
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -30,7 +35,7 @@ export const LoginScreen = ({ navigation }) => {
       );
       // console.log(userCredential.user);
     } catch (error) {
-      console.error(error);
+      console.log(typeof error);
     }
   };
 
@@ -56,7 +61,13 @@ export const LoginScreen = ({ navigation }) => {
         autoCapitalize="none"
         secureTextEntry
       />
+      <Text
+        style={{ textAlign: "center", color: "red", fontSize: 15, padding: 5 }}
+      >
+        {errorMessage}
+      </Text>
       <Button title="log in" onPress={loginEmailPassword} />
+      <Text></Text>
       {/* <Text style={{ textAlign: "center", fontSize: 18 }}>
         {" "}
         Forgot password?{" "}

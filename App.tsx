@@ -4,11 +4,12 @@ import { CreateAcScreen } from "./screens/CreateAcScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./screens/LoginScreen";
 import { ForgotPasswordScreen } from "./screens/ForgotPasswordScreen";
+import { logout } from "./screens/HomeScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -55,7 +56,22 @@ export default function App() {
             />
           </>
         ) : (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              headerRight: () => (
+                <Pressable onPress={logout}>
+                  <View>
+                    <Text style={{ color: "red", fontSize: 15 }}>
+                      {" "}
+                      Log Out{" "}
+                    </Text>
+                  </View>
+                </Pressable>
+              ),
+            }}
+          />
         )}
       </Stack.Navigator>
     </NavigationContainer>
