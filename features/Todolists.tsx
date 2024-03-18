@@ -3,6 +3,7 @@ import { FlatList, Switch, View, Button, ScrollView, Text } from "react-native";
 export const Todolists = ({ tasks, toggleSwitch, deleteTask }) => {
   const renderItem = ({ item }) => {
     // console.log(item);
+    // console.log("renderItem console!!!");
     return (
       <View
         key={item.key}

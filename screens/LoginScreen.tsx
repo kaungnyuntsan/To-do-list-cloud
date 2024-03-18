@@ -35,7 +35,7 @@ export const LoginScreen = ({ navigation }) => {
       );
       // console.log(userCredential.user);
     } catch (error) {
-      console.log(typeof error);
+      console.error(error);
     }
   };
 

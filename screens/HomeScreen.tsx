@@ -41,6 +41,7 @@ export const logout = async () => {
 export const HomeScreen = () => {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const sortCompareFn = (a, b) => {
     if (a.key < b.key) {
@@ -75,7 +76,7 @@ export const HomeScreen = () => {
 
     onChildAdded(userReference, (data) => {
       console.log("onChild Added event run!");
-
+      // console.log(data);
       setTasks((tasks) => [
         ...tasks,
         { key: data.key, task: data.val().task, isDone: data.val().isDone },
@@ -85,6 +86,8 @@ export const HomeScreen = () => {
         const newRefTasks = [...tasks];
         return newRefTasks.sort(sortCompareFn);
       });
+
+      setIsLoading(false);
     });
 
     onChildChanged(userReference, (data) => {
@@ -114,11 +117,6 @@ export const HomeScreen = () => {
       console.log("cleanup called!");
     };
   }, []);
-
-  // useEffect(() => {
-  //   console.log("useEffect 2 running!");
-  //   // sortedTasks();
-  // }, [tasks]);
 
   const addTask = (task) => {
     const userId = auth.currentUser?.uid;
@@ -188,6 +186,14 @@ export const HomeScreen = () => {
   //     </View>
   //   );
   // };
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ fontSize: 20 }}> Loading... </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
