@@ -26,6 +26,8 @@ import {
   onValue,
   query,
   orderByKey,
+  DataSnapshot,
+  orderByChild,
 } from "firebase/database";
 import { auth } from "./LoginScreen";
 import { signOut } from "firebase/auth";
@@ -75,8 +77,9 @@ export const HomeScreen = () => {
     // );
 
     onChildAdded(userReference, (data) => {
-      console.log("onChild Added event run!");
+      // console.log("onChild Added event run!");
       // console.log(data);
+
       setTasks((tasks) => [
         ...tasks,
         { key: data.key, task: data.val().task, isDone: data.val().isDone },
